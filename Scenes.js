@@ -1,6 +1,6 @@
 const { Scenes } = require('telegraf')
 require('dotenv').config({path: __dirname + '/.env'});
-const {validatePhone, validateName, validateOrder, result} = require('./Utils')
+const {validatePhone, validateOrder, result} = require('./Utils')
 
 
 class SceneGenerator {
@@ -52,6 +52,7 @@ class SceneGenerator {
         })
         time.on('text', async (ctx) => {
                 await ctx.reply('Время установлено успешно.')
+                await ctx.reply('Ваша заявка принята, ожидайте звонка оператора.')
                 result.time = ctx.message.text
                 await ctx.telegram.sendMessage(process.env.CHAT_ID, result)
                 await ctx.scene.leave()
