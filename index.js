@@ -15,6 +15,9 @@ bot.use(stage.middleware())
 bot.action('btn_1', async (ctx) => {
     await ctx.scene.enter('phone')
 })
+bot.command('scene', async (ctx) => {
+    await ctx.scene.enter('phone')
+})
 
 bot.start(ctx => {
     ctx.reply('Вас приветствует бот от Ростелекома, в целях удобства вы можете назначить время звонка оператора.',
