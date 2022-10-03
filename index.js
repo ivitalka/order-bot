@@ -5,10 +5,9 @@ const mongoose = require('mongoose');
 const MainSceneGenerator = require('./Scenes/MainScenes')
 const ExportSceneGenerator = require('./Scenes/ExportScenes')
 const CounterModel = require('./Models/counter')
-//const UserModel = require('./Models/user')
 
 mongoose.connect(process.env.DB_CONNECTION_URI)
-    .then(() => console.log('connected'))
+    .then(() => console.log('Connected to MongoDb'))
     .catch((err) => console.log(err));
 
 
@@ -26,6 +25,7 @@ const ordersExportScene = exportOrderScene.GenOrdersExportScene()
 const gppOrdersScene = exportOrderScene.GenGppOrdersScene()
 const otherOrdersScene = exportOrderScene.GenOtherOrdersScene()
 const allOrdersScene = exportOrderScene.GenAllOrdersScene()
+const countersExportScene = exportOrderScene.GenCounterExportScene()
 
 const stage = new Scenes.Stage([
     phoneScene,
@@ -37,7 +37,8 @@ const stage = new Scenes.Stage([
     ordersExportScene,
     gppOrdersScene,
     otherOrdersScene,
-    allOrdersScene
+    allOrdersScene,
+    countersExportScene
 ])
 
 bot.use(session())
@@ -51,12 +52,6 @@ bot.command('order_call', async (ctx) => {
         await ctx.scene.enter('phone')
 })
 
-// bot.command('admin', async (ctx) => {
-//         UserModel.create({
-//             userId: ctx.message.from.id
-//         }).then((user) => console.log(user))
-// })
-
 bot.command('export', async (ctx) => {
     await ctx.scene.enter('choose_action')
 })
@@ -67,8 +62,10 @@ bot.start(ctx => {
         .then((user) => {
             if (!user) {
                 CounterModel.create({userId: ctx.message.from.id, name: ctx.message.from.first_name, date: now})
+                    .catch((err) => console.log(err))
             }
-        })
+        }).catch((err) => {
+        console.log(err)})
     ctx.reply('Вас приветствует бот от Ростелекома!\n' +
         'К сожалению, мы не смогли с Вами связаться. С помощью нашего бота Вы можете назначить удобное время для звонка оператора.',
         Markup.inlineKeyboard([Markup.button.callback('Назначить время', 'btn_1')])

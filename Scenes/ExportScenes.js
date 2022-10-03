@@ -2,7 +2,11 @@ const { Markup } = require('telegraf')
 const { Scenes: MainScenes } = require('telegraf')
 require('dotenv').config({path: __dirname + '/.env'})
 const { orderSceneContent } = require('../Utils/Export')
+const fs = require("fs")
+const { Parser } = require('json2csv');
+const { validateDate } = require('../Utils/Validation')
 const UserModel = require('../Models/user')
+const CounterModel = require('../Models/counter')
 
 
 class ExportSceneGenerator {
@@ -13,7 +17,7 @@ class ExportSceneGenerator {
             await ctx.scene.enter('orders_export')
         })
         chooseAction.action('btn_choose_users_export', async (ctx) => {
-            await ctx.scene.enter('users_export')
+            await ctx.scene.enter('counters_export')
         })
         chooseAction.enter(async (ctx) => {
             await UserModel.findOne({userId: ctx.message.from.id})
@@ -57,6 +61,48 @@ class ExportSceneGenerator {
             ]))
         })
         return ordersExport
+    }
+
+    GenCounterExportScene () {
+        const countersExport = new MainScenes.BaseScene('counters_export')
+
+        countersExport.enter(async (ctx) => {
+            await ctx.reply('Укажите интервал в формате: месяц.день.год-месяц.день.год')
+            await countersExport.on('text', async (ctx) => {
+                let date = ctx.message.text
+                if (validateDate(date)) {
+                    let res = date.split('-')
+                    res[0] = new Date(`${res[0]} 00:00 +04`)
+                    res[1] = new Date(`${res[1]} 23:59 +04`)
+                    if(res[0] > res[1]) {
+                        await ctx.reply('Начало интервала не может быть больше его конца')
+                    } else{
+                        CounterModel.find({date: {$gte: res[0], $lte: res[1]}}, {_id:0, __v: 0})
+                            .then((orders) => {
+                                const fields = ['userId', 'name', 'date'];
+                                const opts = { fields }
+                                const parser = new Parser(opts)
+                                const csvData = parser.parse(orders)
+                                fs.writeFile("counters.csv", csvData, (error) => {
+                                    if (error) throw error
+                                    console.log('Write to counters.csv successfully!')
+                                    ctx.replyWithDocument({ source: './counters.csv', filename: 'counters.csv' })
+                                        .catch((err) => console.log(err))
+                                    fs.unlink('./counters.csv', ((err) => {
+                                        if(err){ throw err }
+                                        console.log('counters.csv deleted!')
+                                    }))
+                                })
+                            })
+                        await ctx.scene.leave()
+                    }
+                }
+                else{
+                    await ctx.reply('Неверно указан интервал')
+                }
+            })
+        })
+        return countersExport
     }
 
     GenGppOrdersScene () {
