@@ -13,7 +13,11 @@ const CounterSchema = new mongoose.Schema({
     date: {
         type: Date,
         required: true,
-    }
+    },
+    // adReceived: {
+    //     type: Boolean,
+    //     required: true,
+    // }
 });
 
 module.exports = mongoose.model('counter', CounterSchema);

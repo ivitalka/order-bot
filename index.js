@@ -48,6 +48,11 @@ bot.action('btn_1', async (ctx) => {
         await ctx.scene.enter('phone')
 })
 
+bot.action('btn_2', async (ctx) => {
+    await ctx.replyWithHTML(`Продолжая использовать наш Telegram-бот, вы даете согласие на обработку пользовательских данных, в соответствии с
+<a href="https://drive.google.com/file/d/1avU8Sf3SM2kCsiBH2uRt0qcryFjCBLFm">Политикой конфиденциальности и Пользовательским соглашением</a>`)
+})
+
 bot.command('order_call', async (ctx) => {
         await ctx.scene.enter('phone')
 })
@@ -56,20 +61,38 @@ bot.command('export', async (ctx) => {
     await ctx.scene.enter('choose_action')
 })
 
+bot.command('policy', async (ctx) => {
+    await ctx.replyWithHTML(`Продолжая использовать наш Telegram-бот, вы даете согласие на обработку пользовательских данных, в соответствии с
+<a href="https://drive.google.com/file/d/1avU8Sf3SM2kCsiBH2uRt0qcryFjCBLFm/view">Политикой конфиденциальности и Пользовательским соглашением</a>`)
+})
+
+// bot.command('update',  () => {
+//      CounterModel.updateMany({}, {$set: {adReceived: false}})
+//          .then(() => console.log('updated!'))
+//          .catch(err => console.log(err))
+// })
+
 bot.start(ctx => {
     const now = new Date()
     CounterModel.findOne({userId: ctx.message.from.id})
         .then((user) => {
             if (!user) {
-                CounterModel.create({userId: ctx.message.from.id, name: ctx.message.from.first_name, date: now})
-                    .catch((err) => console.log(err))
+                CounterModel.create({
+                    userId: ctx.message.from.id,
+                    name: ctx.message.from.first_name,
+                    date: now,
+                    adReceived: false
+                }).catch((err) => console.log(err))
             }
         }).catch((err) => {
         console.log(err)})
+
     ctx.reply('Вас приветствует бот от Ростелекома!\n' +
         'К сожалению, мы не смогли с Вами связаться. С помощью нашего бота Вы можете назначить удобное время для звонка оператора.',
-        Markup.inlineKeyboard([Markup.button.callback('Назначить время', 'btn_1')])
-    )
+        Markup.inlineKeyboard([
+            Markup.button.callback('Назначить время', 'btn_1'),
+            Markup.button.callback('Политика конфиденциальности', 'btn_2'),
+        ]))
     })
 
 bot.on('text', async (ctx) => {
