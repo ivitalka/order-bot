@@ -6,7 +6,11 @@ const MainSceneGenerator = require('./Scenes/MainScenes')
 const ExportSceneGenerator = require('./Scenes/ExportScenes')
 const CounterModel = require('./Models/counter')
 const UserModel = require('./Models/user')
-const { videoAdvert } = require('./Utils/Advert')
+const { sendPromo } = require('./Utils/Advert')
+const { videoAdFilter,
+        videoAdImageId,
+        videoAdMessage,
+        videoAdUpdatedValue } = require('./Utils/AdvertVariables')
 
 mongoose.connect(process.env.DB_CONNECTION_URI)
     .then(() => console.log('Connected to MongoDb'))
@@ -43,6 +47,9 @@ const stage = new Scenes.Stage([
     countersExportScene
 ])
 
+
+
+
 bot.use(session())
 bot.use(stage.middleware())
 
@@ -56,7 +63,7 @@ bot.action('btn_2', async (ctx) => {
 })
 
 bot.action('btn_videoAd', async (ctx) => {
-    await videoAdvert(ctx)
+    await sendPromo(ctx, videoAdFilter, videoAdImageId, videoAdMessage, videoAdUpdatedValue)
 })
 
 bot.command('order_call', async (ctx) => {
@@ -116,6 +123,7 @@ bot.start(ctx => {
 
 bot.on('message', async (ctx) => {
         await ctx.reply('Вы ввели неверное значение, нажмите, пожалуйста кнопку, чтобы продолжить.')
+        console.log(ctx.message.photo)
 })
 
 bot.launch().then(() => console.log('Launch!'));
