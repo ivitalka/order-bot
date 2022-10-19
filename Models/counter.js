@@ -14,10 +14,20 @@ const CounterSchema = new mongoose.Schema({
         type: Date,
         required: true,
     },
-    // adReceived: {
-    //     type: Boolean,
-    //     required: true,
-    // }
+    adReceived: {
+        videoAd: {
+            type: Boolean,
+            required: true,
+        },
+        capsuleAd: {
+            type: Boolean,
+            required: true,
+        },
+        winkPlusAd: {
+            type: Boolean,
+            required: true,
+        }
+    }
 });
 
 module.exports = mongoose.model('counter', CounterSchema);
