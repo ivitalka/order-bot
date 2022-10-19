@@ -81,8 +81,8 @@ bot.command('advert', async (ctx) => {
                 ctx.reply('Какую рекламу будем отправлять?',
                     Markup.inlineKeyboard([
                         Markup.button.callback('Видео', 'btn_videoAd'),
-                        Markup.button.callback('Капсула', 'btn_capsuleAd'),
-                        Markup.button.callback('Wink+', 'btn_winkPlusAd'),
+                        // Markup.button.callback('Капсула', 'btn_capsuleAd'),
+                        // Markup.button.callback('Wink+', 'btn_winkPlusAd'),
                     ]))
             }
         })
