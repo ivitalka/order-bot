@@ -10,7 +10,12 @@ const { sendPromo } = require('./Utils/Advert')
 const { videoAdFilter,
         videoAdImageId,
         videoAdMessage,
-        videoAdUpdatedValue } = require('./Utils/AdvertVariables')
+        videoAdUpdatedValue,
+        capsuleAdFilter,
+        capsuleAdImageId,
+        capsuleAdMessage,
+        capsuleAdUpdatedValue
+        } = require('./Utils/AdvertVariables')
 
 mongoose.connect(process.env.DB_CONNECTION_URI)
     .then(() => console.log('Connected to MongoDb'))
@@ -66,6 +71,10 @@ bot.action('btn_videoAd', async (ctx) => {
     await sendPromo(ctx, videoAdFilter, videoAdImageId, videoAdMessage, videoAdUpdatedValue)
 })
 
+bot.action('btn_capsuleAd', async (ctx) => {
+    await sendPromo(ctx, capsuleAdFilter, capsuleAdImageId, capsuleAdMessage, capsuleAdUpdatedValue)
+})
+
 bot.command('order_call', async (ctx) => {
         await ctx.scene.enter('phone')
 })
@@ -88,7 +97,7 @@ bot.command('advert', async (ctx) => {
                 ctx.reply('Какую рекламу будем отправлять?',
                     Markup.inlineKeyboard([
                         Markup.button.callback('Видео', 'btn_videoAd'),
-                        // Markup.button.callback('Капсула', 'btn_capsuleAd'),
+                        Markup.button.callback('Капсула', 'btn_capsuleAd'),
                         // Markup.button.callback('Wink+', 'btn_winkPlusAd'),
                     ]))
             }
