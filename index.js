@@ -66,6 +66,10 @@ bot.action('btn_2', async (ctx) => {
     await ctx.replyWithHTML(`Продолжая использовать наш Telegram-бот, вы даете согласие на обработку пользовательских данных, в соответствии с
 <a href="https://drive.google.com/file/d/1avU8Sf3SM2kCsiBH2uRt0qcryFjCBLFm">Политикой конфиденциальности и Пользовательским соглашением</a>`)
 })
+bot.action('btn_3', async (ctx) => {
+    await ctx.replyWithHTML(`Продолжая использовать наш Telegram-бот, вы даете согласие на обработку пользовательских данных, в соответствии с
+<a href="https://drive.google.com/file/d/1avU8Sf3SM2kCsiBH2uRt0qcryFjCBLFm">Политикой конфиденциальности и Пользовательским соглашением</a>`)
+})
 
 bot.action('btn_videoAd', async (ctx) => {
     await sendPromo(ctx, videoAdFilter, videoAdImageId, videoAdMessage, videoAdUpdatedValue)
@@ -125,9 +129,10 @@ bot.start(ctx => {
     ctx.reply('Вас приветствует бот от Ростелекома!\n' +
         'К сожалению, мы не смогли с Вами связаться. С помощью нашего бота Вы можете назначить удобное время для звонка оператора.',
         Markup.inlineKeyboard([
-            Markup.button.callback('Назначить время', 'btn_1'),
-            Markup.button.callback('Политика конфиденциальности', 'btn_2'),
-        ]))
+            [Markup.button.callback('Назначить время', 'btn_1'),
+            Markup.button.url('Отследить заявку в ЛК', 'https://lk.rt.ru/')],
+            [Markup.button.callback('Политика конфиденциальности', 'btn_2')]
+        ], ))
     })
 
 bot.on('message', async (ctx) => {
