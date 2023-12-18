@@ -18,7 +18,7 @@ const sendPromo = async (ctx, findFilter, imageId, message, updatedValue) => {
                             let user = users[i].userId
                             await bot.telegram.sendPhoto(user, imageId)
                                 .catch(err => console.log(err))
-                            await bot.telegram.sendMessage(user, message, {parse_mode: 'HTML'})
+                           await bot.telegram.sendMessage(user, message, {parse_mode: 'HTML'})
                                 .then(async (res) => {
                                     if (res.message_id){
                                         successSend++

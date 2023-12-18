@@ -16,12 +16,15 @@ function exportOrders(ctx, arg) {
                 if (error) throw error
                 console.log('Write to orders.csv successfully!')
                 ctx.replyWithDocument({ source: './orders.csv', filename: 'orders.csv' })
+                    .then(() => {
+                        fs.unlink('./orders.csv', ((err) => {
+                            if(err){ throw err }
+                            console.log('orders.csv deleted')
+                            arg = {}
+                        }))
+                    })
                     .catch((err) => console.log(err))
-                fs.unlink('./orders.csv', ((err) => {
-                    if(err){ throw err }
-                    console.log('orders.csv deleted')
-                    arg = {}
-                }))
+
             })
         })
 
