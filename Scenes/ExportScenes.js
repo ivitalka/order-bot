@@ -87,11 +87,13 @@ class ExportSceneGenerator {
                                     if (error) throw error
                                     console.log('Write to counters.csv successfully!')
                                     ctx.replyWithDocument({ source: './counters.csv', filename: 'counters.csv' })
+                                        .then(() => {
+                                            fs.unlink('./counters.csv', ((err) => {
+                                                if(err){ throw err }
+                                                console.log('counters.csv deleted!')
+                                            }))
+                                        })
                                         .catch((err) => console.log(err))
-                                    fs.unlink('./counters.csv', ((err) => {
-                                        if(err){ throw err }
-                                        console.log('counters.csv deleted!')
-                                    }))
                                 })
                             })
                         await ctx.scene.leave()

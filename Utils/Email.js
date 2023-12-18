@@ -32,4 +32,3 @@ async function sendMail(result)
 }
 
 module.exports = {sendMail};
-

@@ -22,5 +22,3 @@ function validateDate (date) {
 
 
 module.exports = {validatePhone, validateOrder, validateDate};
-
-

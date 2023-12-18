@@ -59,16 +59,31 @@ bot.use(session())
 bot.use(stage.middleware())
 
 bot.action('btn_1', async (ctx) => {
-        await ctx.scene.enter('phone')
+      try {
+          await ctx.scene.enter('phone')
+      }
+      catch (err) {
+          console.log(err)
+      }
 })
 
 bot.action('btn_2', async (ctx) => {
-    await ctx.replyWithHTML(`Продолжая использовать наш Telegram-бот, вы даете согласие на обработку пользовательских данных, в соответствии с
-<a href="https://drive.google.com/file/d/1avU8Sf3SM2kCsiBH2uRt0qcryFjCBLFm">Политикой конфиденциальности и Пользовательским соглашением</a>`)
+    try {
+        await ctx.replyWithHTML(`Продолжая использовать наш Telegram-бот, вы даете согласие на обработку пользовательских данных, в соответствии с
+    <a href="https://drive.google.com/file/d/1avU8Sf3SM2kCsiBH2uRt0qcryFjCBLFm">Политикой конфиденциальности и Пользовательским соглашением</a>`)
+    }
+    catch (err) {
+        console.log(err)
+    }
 })
 bot.action('btn_3', async (ctx) => {
-    await ctx.replyWithHTML(`Продолжая использовать наш Telegram-бот, вы даете согласие на обработку пользовательских данных, в соответствии с
-<a href="https://drive.google.com/file/d/1avU8Sf3SM2kCsiBH2uRt0qcryFjCBLFm">Политикой конфиденциальности и Пользовательским соглашением</a>`)
+    try {
+        await ctx.replyWithHTML(`Продолжая использовать наш Telegram-бот, вы даете согласие на обработку пользовательских данных, в соответствии с
+    <a href="https://drive.google.com/file/d/1avU8Sf3SM2kCsiBH2uRt0qcryFjCBLFm">Политикой конфиденциальности и Пользовательским соглашением</a>`)
+    }
+    catch (err) {
+        console.log(err)
+    }
 })
 
 bot.action('btn_videoAd', async (ctx) => {
@@ -88,8 +103,13 @@ bot.command('export', async (ctx) => {
 })
 
 bot.command('policy', async (ctx) => {
-    await ctx.replyWithHTML(`Продолжая использовать наш Telegram-бот, вы даете согласие на обработку пользовательских данных, в соответствии с
-<a href="https://drive.google.com/file/d/1avU8Sf3SM2kCsiBH2uRt0qcryFjCBLFm/view">Политикой конфиденциальности и Пользовательским соглашением</a>`)
+    try {
+        await ctx.replyWithHTML(`Продолжая использовать наш Telegram-бот, вы даете согласие на обработку пользовательских данных, в соответствии с
+    <a href="https://drive.google.com/file/d/1avU8Sf3SM2kCsiBH2uRt0qcryFjCBLFm/view">Политикой конфиденциальности и Пользовательским соглашением</a>`)
+    }
+    catch (err) {
+        console.log(err)
+    }
 })
 
 bot.command('advert', async (ctx) => {
@@ -108,7 +128,7 @@ bot.command('advert', async (ctx) => {
         })
 })
 
-bot.start(ctx => {
+bot.start(async (ctx) => {
     const now = new Date()
     CounterModel.findOne({
         userId: ctx.message.from.id,})
@@ -125,21 +145,31 @@ bot.start(ctx => {
             }
         }).catch((err) => {
         console.log(err)})
-
-    ctx.reply('Вас приветствует бот от Ростелекома!\n' +
-        'К сожалению, мы не смогли с Вами связаться.\n' +
-        'С помощью нашего бота Вы можете назначить удобное время для звонка оператора или узнать статус своей заявки.',
-        Markup.inlineKeyboard([
-            [Markup.button.callback('Назначить время', 'btn_1'),
-            Markup.button.url('Отследить заявку', 'https://lk.rt.ru/')],
-            [Markup.button.callback('Политика конфиденциальности', 'btn_2')]
-        ], ))
+    try {
+        await ctx.reply('Вас приветствует бот от Ростелекома!\n' +
+            'К сожалению, мы не смогли с Вами связаться.\n' +
+            'С помощью нашего бота Вы можете назначить удобное время для звонка оператора или узнать статус своей заявки.',
+            Markup.inlineKeyboard([
+                [Markup.button.callback('Назначить время', 'btn_1'),
+                    Markup.button.url('Отследить заявку', 'https://lk.rt.ru/')],
+                [Markup.button.callback('Политика конфиденциальности', 'btn_2')]
+            ],))
+    }
+    catch (err) {
+        console.log(err)
+    }
     })
 
 bot.on('message', async (ctx) => {
+    try {
         await ctx.reply('Вы ввели неверное значение, нажмите, пожалуйста кнопку, чтобы продолжить.')
-        console.log(ctx.message.photo)
+    }
+    catch (err) {
+        console.log(err)
+    }
 })
 
-bot.launch().then(() => console.log('Launch!'));
+bot.launch()
+    .then(() => console.log('Launch!'))
+    .catch(err => console.log(err));
 
