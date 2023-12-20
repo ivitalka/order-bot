@@ -1,4 +1,4 @@
-require('dotenv').config({path: __dirname + '/.env'});
+require('dotenv').config({ path: __dirname + '/.env' });
 const nodemailer = require('nodemailer')
 
 
@@ -12,8 +12,7 @@ const transporter = nodemailer.createTransport({
     },
 })
 
-async function sendMail(result)
-{
+async function sendMail(result) {
     await transporter.sendMail({
         from: process.env.MAIL_FROM,
         to: process.env.EMAIL,
@@ -27,8 +26,8 @@ async function sendMail(result)
             <li>Номер заявки: ${result.order}</li>
             <li>Время: ${result.time}</li>
             </ul>
-            <p><i>Сообщение отправлено с помощью <a href="https://t.me/RT_Order_Bot">RT_Order_Bot</a></i></p>`,
+            <p><i>Сообщение отправлено с помощью <a href="${proccess.env.BOT_LINK}">${proccess.env.BOT_NAME}</a></i></p>`,
     })
 }
 
-module.exports = {sendMail};
+module.exports = { sendMail };
